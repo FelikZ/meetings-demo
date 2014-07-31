@@ -335,7 +335,7 @@ describe('<Unit Test>', function() {
             });
         });
 
-        describe('getInfo', function() {
+        describe('getStats', function() {
 
             var totalCount;
             var validResponse;
@@ -349,32 +349,46 @@ describe('<Unit Test>', function() {
                 done();
             });
 
-            it('should call all callbacks in all parallel tasks', function(done) {
+            it('should be valid callbacks in all parallel tasks', function(done) {
+
+                meetings.getStats(request, response, next);
+
+                async.parallel.calledWith(
+                    sinon.match({
+                        totalCount: sinon.match.func,
+                        avgPeopleCount: sinon.match.func,
+                        upcomingMeetingsList: sinon.match.func
+                    }),
+                    sinon.match.func
+                ).should.be.true;
+
+                done();
+            });
+
+            it('should get count stats correctly', function(done) {
 
                 var cbCount = sandbox.spy();
 
                 MeetingsMock.count.callsArgWith(1, null, totalCount);
                 async.parallel.yieldsTo('totalCount', cbCount);
 
-                meetings.getInfo(request, response, next);
+                meetings.getStats(request, response, next);
 
-                async.parallel.calledWith(
-                    sinon.match({
-                        totalCount: sinon.match.func
-                    }),
-                    sinon.match.func
-                ).should.be.true;
                 MeetingsMock.count.calledWithExactly({}, cbCount).should.be.true;
                 cbCount.calledWithExactly(null, totalCount).should.be.true;
 
                 done();
             });
 
+            it('should get avgPeopleCount stats correctly');
+
+            it('should get upcomingMeetingsList stats correctly');
+
             it('should send status 200 with info if no error occured', function(done) {
 
                 async.parallel.callsArgWith(1, null, validResponse);
 
-                meetings.getInfo(request, response, next);
+                meetings.getStats(request, response, next);
 
                 response.status.alwaysCalledWithExactly(200).should.be.true;
                 response.send.calledAfter(response.status).should.be.true;
@@ -387,7 +401,7 @@ describe('<Unit Test>', function() {
 
                 async.parallel.callsArgWith(1, {'msg': 'some error'}, validResponse);
 
-                meetings.getInfo(request, response, next);
+                meetings.getStats(request, response, next);
 
                 response.status.alwaysCalledWithExactly(400).should.be.true;
                 response.send.calledAfter(response.status).should.be.true;
@@ -395,6 +409,18 @@ describe('<Unit Test>', function() {
                 response.send.calledWithExactly().should.be.true;
                 done();
             });
+        });
+
+        describe('postSearchMeetings', function() {
+            it('should send status 400 on invalid arguments');
+            it('should form correct query object for db');
+            it('should send status 200 on successfull exec');
+            it('should send status 400 on failed exec');
+        });
+
+        describe('deleteMeetings', function() {
+            it('should send status 200 on successfull exec');
+            it('should send status 400 on failed exec');
         });
 
         afterEach(function( done) {

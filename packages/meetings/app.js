@@ -22,7 +22,6 @@ expressValidator.validator.extend('inRange', function (str, from, to) {
 Meetings.register(function(app, auth, database) {
 
     Meetings.routes(app, auth, database);
-    Meetings.aggregateAsset('css', 'meetings.css');
 
     return Meetings;
 });

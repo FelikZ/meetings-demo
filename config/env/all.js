@@ -68,13 +68,13 @@ module.exports = {
             'Angelina Jolie',
             'Bruce Willis',
             'Quentin Tarantino',
-            'Sandra Balloc',
-            'Bred Pitt',
-            'Monica Belucci',
+            'Sandra Bullock',
+            'Brad Pitt',
+            'Monica Bellucci',
             'Fred Quimby',
             'Elvis Presley',
-            'Jacky Chan',
-            'Arnold Schwarzneger'
+            'Jackie Chan',
+            'Arnold Schwarzenegger'
         ]
     }
   }
