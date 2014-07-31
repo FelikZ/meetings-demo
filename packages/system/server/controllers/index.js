@@ -1,6 +1,7 @@
 'use strict';
 
-var mean = require('meanio');
+var mean = require('meanio'),
+    config = mean.loadConfig();
 
 exports.render = function(req, res) {
 
@@ -20,6 +21,7 @@ exports.render = function(req, res) {
 
   // Send some basic starting info to the view
   res.render('index', {
+    config: config.shared,
     user: req.user ? {
       name: req.user.name,
       _id: req.user._id,

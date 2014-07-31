@@ -96,7 +96,7 @@ module.exports = function(grunt) {
           }
         ]
       },
-      src: ['packages/**/server/tests/**/*.js']
+      src: grunt.option('mochaTestMask') ? [grunt.option('mochaTestMask')] : ['packages/**/server/tests/**/*.js']
     },
     env: {
       test: {

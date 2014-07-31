@@ -1,0 +1,20 @@
+{
+  "name": "meetings",
+  "version": "0.0.1",
+  "description": "Test project",
+  "author": {
+    "name": "Alexey Shevchenko"
+  },
+  "mean": "0.4.0",
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.4.x"
+  },
+  "dependencies": {
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "sinon": "^1.10.3",
+    "rewire": "^2.1.0"
+  }
+}

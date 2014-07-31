@@ -1,10 +1,7 @@
 'use strict';
 
 module.exports = {
-  db: 'mongodb://localhost/mean-dev',
-  app: {
-    name: 'MEAN - FullStack JS - Development'
-  },
+  db: 'mongodb://localhost/meetings',
   facebook: {
     clientID: 'APP_ID',
     clientSecret: 'APP_SECRET',

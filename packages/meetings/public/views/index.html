@@ -1,0 +1,341 @@
+<div class="overlay">
+    <div class="row">
+        <div class="col-xs-9">
+        </div>
+        <div class="col-xs-3">
+            <m-alerts></m-alerts>
+        </div>
+    </div>
+</div>
+
+<div class="container" data-ng-controller="main.meetings.MeetingsCtrl as MeetingsCtrl">
+
+    <div class="row clearfix">
+        <div class="col-xs-12 column">
+            <tabset>
+                <tab ng-controller="main.meetings.InsertCtrl as InsertCtrl">
+                    <tab-heading>
+                        <i class="glyphicon glyphicon-plus"></i> Insert
+                    </tab-heading>
+
+                    <div class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <form role="form">
+                                <div class="form-group col-xs-4">
+                                    <label for="topic">Topic</label>
+                                    <input ng-model="InsertCtrl.topic" id="topic" type="text" class="form-control" placeholder="Meeting about a guy from Ukraine">
+                                </div>
+                                <div class="form-group col-xs-1">
+                                    <label for="count">Amount</label>
+                                    <input ng-model="InsertCtrl.amount" id="count" type="text" popover="It could be up to {{InsertCtrl.maxAmount}}" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="form-control" placeholder="5000" value="5000"  />
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-1">
+                                    <button ng-click="InsertCtrl.insert()" type="submit" class="btn btn-primary">Insert Meetings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </tab>
+                <tab ng-controller="main.meetings.InfoCtrl as InfoCtrl" select="InfoCtrl.init()">
+                    <tab-heading>
+                        <i class="glyphicon glyphicon-info-sign"></i> Information
+                    </tab-heading>
+
+                    <div class="row clearfix">
+                        <div class="col-xs-5 column">
+                            <h4 class="text-center">
+                                Stats
+                            </h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Count
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            Total meetings
+                                        </td>
+                                        <td>
+                                            {{InfoCtrl.info.totalCount}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Average amount of people in next 20 meetings
+                                        </td>
+                                        <td>
+                                            {{InfoCtrl.info.avgPeopleCount}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-if="InfoCtrl.info.upcomingMeetingsList.length > 0" class="col-xs-7 column">
+                            <h4 class="text-center">
+                                Upcoming meetings
+                            </h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">
+                                            Next meeting at
+                                        </th>
+                                        <th>
+                                            For
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="meeting in InfoCtrl.info.upcomingMeetingsList">
+                                        <td>
+                                            {{meeting.date | date:'yyyy-MM-dd HH:mm'}}
+                                        </td>
+                                        <td>
+                                            {{meeting.participant}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </tab>
+                <tab ng-controller="main.meetings.SearchCtrl as SearchCtrl" select="SearchCtrl.init()">
+                    <tab-heading>
+                        <i class="glyphicon glyphicon-search"></i> Search!
+                    </tab-heading>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <accordion close-others="oneAtATime">
+                                <accordion-group is-open="SearchCtrl.isopen">
+                                    <accordion-heading ng-click="SearchCtrl.toggleFilters()">
+                                        <div>
+                                            Filters <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': SearchCtrl.isopen, 'glyphicon-chevron-right': !SearchCtrl.isopen}"></i>
+                                        </div>
+                                    </accordion-heading>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <h4>Dates between</h4>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <p class="input-group"
+                                                                popover="{{SearchCtrl.format}}"
+                                                                popover-placement="top"
+                                                                popover-trigger="mouseenter"
+                                                                popover-append-to-body="true"
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    datepicker-popup="{{SearchCtrl.format}}"
+                                                                    ng-model="SearchCtrl.query.date_start"
+                                                                    is-open="SearchCtrl.datePickerShow.start"
+                                                                    min-date="SearchCtrl.minDate"
+                                                                    datepicker-options="SearchCtrl.dateOptions"
+                                                                    ng-required="true"
+                                                                    close-text="Close"
+                                                                    placeholder="optional"
+                                                                />
+                                                                <span class="input-group-btn">
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-default"
+                                                                        ng-click="SearchCtrl.openPicker($event, 'start')">
+                                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <button type="button" class="btn btn-sm btn-info" ng-click="SearchCtrl.today('start')">Now</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <p class="input-group"
+                                                                popover="{{SearchCtrl.format}}"
+                                                                popover-placement="top"
+                                                                popover-trigger="mouseenter"
+                                                                popover-append-to-body="true"
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    datepicker-popup="{{SearchCtrl.format}}"
+                                                                    ng-model="SearchCtrl.query.date_end"
+                                                                    is-open="SearchCtrl.datePickerShow.end"
+                                                                    min-date="SearchCtrl.minDate"
+                                                                    datepicker-options="SearchCtrl.dateOptions"
+                                                                    ng-required="true"
+                                                                    close-text="Close"
+                                                                    placeholder="optional"
+                                                                />
+                                                                <span class="input-group-btn">
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-default"
+                                                                        ng-click="SearchCtrl.openPicker($event, 'end')">
+                                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <button type="button" class="btn btn-sm btn-info" ng-click="SearchCtrl.today('end')">Now</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <timepicker
+                                                        ng-model="SearchCtrl.query.date_start"
+                                                        ng-change="SearchCtrl.changed()"
+                                                        hour-step="SearchCtrl.hstep"
+                                                        minute-step="SearchCtrl.mstep"
+                                                        show-meridian="false">
+                                                    </timepicker>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <timepicker
+                                                        ng-model="query.date_end"
+                                                        ng-change="SearchCtrl.changed()"
+                                                        hour-step="SearchCtrl.hstep"
+                                                        minute-step="SearchCtrl.mstep"
+                                                        show-meridian="false">
+                                                    </timepicker>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h4>Topic</h4>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <h4>Limit</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <input
+                                                        ng-model="SearchCtrl.query.topic"
+                                                        type="text"
+                                                        class="form-control"
+                                                        placeholder="optional"
+                                                        popover="It is not a fuzzy search, so topic query must be specific"
+                                                        popover-placement="bottom"
+                                                        popover-trigger="mouseenter"
+                                                        popover-append-to-body="true"
+                                                    >
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <input
+                                                        ng-model="SearchCtrl.query.limit"
+                                                        type="text"
+                                                        class="form-control"
+                                                        placeholder="optional"
+                                                        popover="It could be up to {{SearchCtrl.maxLimit}}"
+                                                        popover-placement="right"
+                                                        popover-trigger="mouseenter"
+                                                        popover-append-to-body="true"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <h4>Filter by people</h4>
+                                            <div class="row">
+                                                <div class="col-xs-12"
+                                                    popover="You could choose multiple"
+                                                    popover-placement="left"
+                                                    popover-trigger="mouseenter"
+                                                    popover-append-to-body="true"
+                                                >
+                                                    <select ng-model="SearchCtrl.query.participants" ng-options="item as item for item in SearchCtrl.participantsList" multiple class="form-control" size="10">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <button ng-click="SearchCtrl.onSearch()" type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                        <div class="col-xs-1">
+                            <button ng-click="SearchCtrl.onClear()" type="submit" class="btn btn-default">Clear</button>
+                        </div>
+                    </div>
+
+                    <div ng-if="SearchCtrl.searchResults.length > 0" class="row clearfix">
+                        <div class="col-xs-12 column">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">
+                                            Starts
+                                        </th>
+                                        <th style="width: 10%;">
+                                            Duration
+                                        </th>
+                                        <th style="width: 30%;">
+                                            Topic
+                                        </th>
+                                        <th style="width: 45%;">
+                                            Participants
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="meeting in SearchCtrl.searchResults">
+                                        <td>
+                                            {{meeting.date_start | date:'yyyy-MM-dd HH:mm'}}
+                                        </td>
+                                        <td>
+                                            {{meeting.duration}} h
+                                        </td>
+                                        <td>
+                                            {{meeting.topic}}
+                                        </td>
+                                        <td>
+                                            <span ng-repeat="name in meeting.participants">{{name}}{{$last ? '' : ', '}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </tab>
+                <tab ng-controller="main.meetings.SettingsCtrl as SettingsCtrl" select="SettingsCtrl.init()">
+                    <tab-heading>
+                        <i class="glyphicon glyphicon-cog"></i> Settings
+                    </tab-heading>
+                    <div class="row clearfix" style="padding: 15px;">
+                        <div class="col-xs-2">
+                            <button ng-click="SettingsCtrl.onTruncate()" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> Truncate database</button>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>
+
