@@ -2,6 +2,7 @@
 {% block content %}
   <section data-ui-view ></section>
   <script type="text/javascript">
+    window.config = {{config|json|safe}};
     window.user = {{user|json|safe}};
     window.modules = {{modules|json|safe}};
   </script>
