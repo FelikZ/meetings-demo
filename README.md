@@ -3,181 +3,104 @@
 [![Build Status](https://travis-ci.org/linnovate/mean.png?branch=master)](https://travis-ci.org/linnovate/mean)
 [![Dependencies Status](https://david-dm.org/linnovate/mean.png)](https://david-dm.org/linnovate/mean)
 
-MEAN is a boilerplate that provides a nice starting point for [MongoDB](http://www.mongodb.org/), [Node.js](http://www.nodejs.org/), [Express](http://expressjs.com/), and [AngularJS](http://angularjs.org/) based applications. It is designed to give you a quick and organized way to start developing MEAN based web apps with useful modules like Mongoose and Passport pre-bundled and configured. We mainly try to take care of the connection points between existing popular frameworks and solve common integration problems.
+This Demo is based on [mean.io](https://github.com/linnovate/mean) framework.
 
-## Prerequisites
-* Node.js - Download and Install [Node.js](http://www.nodejs.org/download/). You can also follow [this gist](https://gist.github.com/isaacs/579814) for a quick and easy way to install Node.js and npm
-* MongoDB - Download and Install [MongoDB](http://docs.mongodb.org/manual/installation/) - Make sure `mongod` is running on the default port (27017).
+The original description looks like:
 
-### Tools Prerequisites
-* NPM - Node.js package manage; should be installed when you install node.js.
-* Bower - Web package manager. Installing [Bower](http://bower.io/) is simple when you have `npm`:
+    Build a meeting web application using the following technologies:
+    - Node.js 
+    - MongoDb
+    BONUS:
+    - Setup the frontend in AngularJs
 
-```
-$ npm install -g bower
-```
+    The database contains:
+    - Start and end date/time of a meeting
+    - Topic of the meeting
+    - Names of people in the meeting (max 10)
 
-### Optional [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-* Grunt - Download and Install [Grunt](http://gruntjs.com).
-```
-$ npm install -g grunt-cli
-```
+    The App shows the following
+    - Button to insert 5.000 additional meetings with a given topic at random dates with random durations (max 8 hours) and random members out of a list of 10
+    - Show the total amount of meetings in the database
+    - Show the upcoming 5 meetings starting from today, topic, people, date / time
+    - Show the average amount of people in the next 20 meetings
+    - Show the next meeting date of each person
 
-## Additional Packages
-* Express - Defined as npm module in the [package.json](package.json) file.
-* Mongoose - Defined as npm module in the [package.json](package.json) file.
-* Passport - Defined as npm module in the [package.json](package.json) file.
-* AngularJS - Defined as bower module in the [bower.json](bower.json) file.
-* Twitter Bootstrap - Defined as bower module in the [bower.json](bower.json) file.
-* UI Bootstrap - Defined as bower module in the [bower.json](bower.json) file.
+    If you have difficulties implementing this in Mongodb, you can use Mysql, Node.js can be PHP, but I prefer that you show me how quickly you adapt new technologies.
 
-## Quick Install
-  The quickest way to get started with MEAN is to install the `meanio` package from NPM.
+**A lot of time was spent on:**
 
-  Install MEAN CLI:
+* mongodb documentation;
+* mean.io investigation;
+* unit testing;
+* frontend ui design.
 
-    $ [sudo] npm install -g meanio@latest
-    $ mean init <myApp>
-    $ cd <myApp> && npm install
+**What is done:**
 
-  We recommend using [Grunt](https://github.com/gruntjs/grunt-cli) to start the server:
+Single page web application based on mean.io framework which is perfectly suits requirements ( **M**ongo **E**xpress **A**ngularJS **N**odeJS )
 
-    $ grunt
+    button to insert 5.000 additional meetings with a given topic at random dates with random durations (max 8 hours) and random members out of a list of 10
 
-  If grunt aborts because of JSHINT errors, these can be overridden with the `force` flag:
+Implemented at the "Insert" tab, max limit increased up to 25.000
 
-    $ grunt -f
+    - Show the total amount of meetings in the database
+    - Show the average amount of people in the next 20 meetings
 
-  Alternatively, when not using `grunt` you can run:
+Implemented at the "Information" tab, left column "Stats".
 
-    $ node server
+    - Show the next meeting date of each person
 
-  Then, open a browser and go to:
+Implemented at the "Information" tab, right column "Upcoming meetings"
 
-    http://localhost:3000
+    - Show the upcoming 5 meetings starting from today, topic, people, date / time
 
+Implemented at the "Search" tab as a "filters". 5 results could be changed in "Limit" filter which is limited by config.
 
-## Troubleshooting
-During install some of you may encounter some issues.
+Amount of meetings and other options can be controlled via **config/env/all.js**, there are a lot of options such as: maxInsertsPerQuery, maxSearchResults, maxYearsFromNow, minDuration, maxDuration, upcomingMeetingsCount, avgPeopleMeetingsCount , nextMeetingDatesLimit, fakeUserNames.
 
-Most issues can be solved by one of the following tips, but if are unable to find a solution feel free to contact us via the repository issue tracker or the links provided below.
+**New things learned:**
 
-#### Update NPM, Bower or Grunt
-Sometimes you may find there is a weird error during install like npm's *Error: ENOENT*. Usually updating those tools to the latest version solves the issue.
+* testing functions based on Math.random behaviour;
+* testing chains (a bit);
+* mongodb index-intersections;
+* mongodb aggregations;
+* usage mapReduce() over group();
+* angularjs 1.2+ modern way to organize services / controllers ( via )
+* angular.ui.router states;
+* angular.ui.bootstrap controls;
+* bootstrap itself (a bit);
+* mean.io framework basics and deployment process using Grunt.
 
-* Updating NPM:
-```
-$ npm update -g npm
-```
+**How to setup at home:**
 
-* Updating Grunt:
-```
-$ npm update -g grunt-cli
-```
+1. mongodb 2.6.* should be installed
+2. npm / nodejs 0.10.* should be installed
+3. git clone https://github.com/FelikZ/meetings-demo.git && cd meetings-demo
+4. git checkout -b meetings-demo origin/meetings-demo
+5. npm install -g bower
+6. npm install -g grunt-cli
+7. npm install && cd packages/meetings && npm install && cd ../..
+8. bower install
+9. NODE_ENV=test grunt test
+10. NODE_ENV=production grunt
+11. access at htpp://localhost:8080/
 
-* Updating Bower:
-```
-$ npm update -g bower
-```
+**For DB performance it is strongly recommended to add following indexes to meetings db:**
 
-#### Cleaning NPM and Bower cache
-NPM and Bower has a caching system for holding packages that you already installed.
-We found that often cleaning the cache solves some troubles this system creates.
+    db.meetings.ensureIndex( { date_start: 1 } )
+    db.meetings.ensureIndex( { topic: "hashed" } )
+ 
+DB performance tested within **500.000** of meetings on single node, works pretty fast and this is not a limit.
 
-* NPM Clean Cache:
-```
-$ npm cache clean
-```
+**Possible improvements / features that should make a world better:**
 
-* Bower Clean Cache:
-```
-$ bower cache clean
-```
-
-#### Installation problems on Windows 8 / 8.1
-Some of Mean.io dependencies uses [node-gyp](https://github.com/TooTallNate/node-gyp) with supported Python version 2.7.x. So if you see an error related to node-gyp rebuild follow next steps:
-
-1. install [Python 2.7.x](https://www.python.org/downloads/)
-2. install [Microsoft Visual Studio C++ 2012 Express](http://www.microsoft.com/ru-ru/download/details.aspx?id=34673)
-3. fire NPM update
-````
-$ npm update -g
-````
-
-## Configuration
-All configuration is specified in the [config](/config/) folder, through the [env](config/env/) files, and is orchestrated through the [meanio](https://github.com/linnovate/mean-cli) NPM module. Here you will need to specify your application name, database name, and hook up any social app keys if you want integration with Twitter, Facebook, GitHub, or Google.
-
-### Environmental Settings
-
-There are three environments provided by default: __development__, __test__, and __production__.
-
-Each of these environments has the following configuration options:
-
- * __db__ - This is the name of the MongoDB database to use, and is set by default to __mean-dev__ for the development environment.
-* __app.name__ - This is the name of your app or website, and can be different for each environment. You can tell which environment you are running by looking at the TITLE attribute that your app generates.
-* __Social OAuth Keys__ - Facebook, GitHub, Google, Twitter. You can specify your own social application keys here for each platform:
-  * __clientID__
-  * __clientSecret__
-  * __callbackURL__
-* __mailer__ - This is where you enter your email service provider, username and password
-
-To run with a different environment, just specify NODE_ENV as you call grunt:
-
-    $ NODE_ENV=test grunt
-
-If you are using node instead of grunt, it is very similar:
-
-    $ NODE_ENV=test node server
-
-To simply run tests
-
-    $ npm test
-
-> NOTE: Running Node.js applications in the __production__ environment enables caching, which is disabled by default in all other environments.
-
-## Maintaining your own repository
-After initializing a project, you'll see that the root directory of your project is already a git repository. MEAN uses git to download and update its own code. To handle its own operations, MEAN creates a remote called `upstream`. This way you can use git as you would in any other project.
-
-To maintain your own public or private repository, add your repository as remote. See here for information on [adding an existing project to GitHub](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line).
-
-```
-git remote add origin <remote repository URL>
-git push -u origin master
-```
-
-
-## Getting Started
-We pre-included an article example. Check out:
-
-  * [The Model](packages/articles/server/models/article.js) - Where we define our object schema.
-  * [The Controller](packages/articles/server/controllers/articles.js) - Where we take care of our backend logic.
-  * [NodeJS Routes](packages/articles/server/routes/articles.js) - Where we define our REST service routes.
-  * [AngularJs Routes](packages/articles/public/routes/articles.js) - Where we define our CRUD routes.
-  * [The AngularJs Service](packages/articles/public/services/articles.js) - Where we connect to our REST service.
-  * [The AngularJs Controller](packages/articles/public/controllers/articles.js) - Where we take care of  our frontend logic.
-  * [The AngularJs Views Folder](packages/articles/public/views) - Where we keep our CRUD views.
-
-## Heroku Quick Deployment
-Before you start make sure you have the [Heroku toolbelt](https://toolbelt.heroku.com/)
-installed and an accessible MongoDB instance - you can try [MongoHQ](http://www.mongohq.com/)
-which has an easy setup).
-
-Add the db string to the production env in server/config/env/production.js.
-
-```
-git init
-git add .
-git commit -m "initial version"
-heroku apps:create
-heroku config:add NODE_ENV=production
-heroku config:add BUILDPACK_URL=https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt.git
-git push heroku master
-heroku config:set NODE_ENV=production
-```
-
-## More Information
-  * Visit us at [Linnovate.net](http://www.linnovate.net/).
-  * Visit our [Ninja's Zone](http://www.meanleanstartupmachine.com/) for extended support.
-
-## License
-[The MIT License](http://opensource.org/licenses/MIT)
+* should be added ability to manage holidays / weekends and working hours during meeting generation and search;
+* dates in DB should be stored in UTC and handled correctly on client-side;
+* backend should have common data validation mechanism;
+* configs with sensitive data such a passwords shouldn't be controlled by git, it should be stored in separated, ignored via `.gitignore` files. The only EXAMPLE values should be commited in controlled version of config;
+* already written tests should cover more fail situations and not all modules are covered yet;
+* should be added integration and functional tests, only backend unit tests added right now;
+* should be added frontend tests (at least unit tests)
+* client-side query caching via localstorage;
+* url routing via ui-router;
+* frontend templates in separate views;
+* CDN support for images / css.
